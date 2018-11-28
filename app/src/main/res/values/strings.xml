@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Knowledge is Power</string>
+    <string name="title_activity_read_screen">ReadScreen</string>
 </resources>
