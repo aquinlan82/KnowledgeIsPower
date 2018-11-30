@@ -7,9 +7,10 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/streak"
         android:layout_width="144dp"
         android:layout_height="61dp"
-        android:text="You have a streak of"
+        android:text="You have a streak of "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
