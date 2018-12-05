@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
             long difference = Math.abs(todayAsDate.getTime() - lastVisitAsDate.getTime());
             long differenceDates = difference / (24 * 60 * 60 * 1000);
+            Log.d("MAINS", differenceDates + " dif");
             if (differenceDates == 0) {
                 return;
             }
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 sb.append(line);
             }
             in.close();
-            streakView.setText(streakView.getText() + sb.toString() + " days in a row!");
+            streakView.setText("You have a streak of " + sb.toString() + " days in a row!");
             return sb.toString();
         } catch (Exception e) {
             e.printStackTrace();

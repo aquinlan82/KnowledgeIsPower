@@ -34,6 +34,7 @@ public class ReadScreen extends AppCompatActivity {
 
             if(minutes >= 1) {
                 doneButton.setEnabled(true);
+                doneButton.setVisibility(View.VISIBLE);
                 if (changeStatus == false) {
                     updateRead();
                     changeStatus = true;
