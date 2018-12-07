@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String readDateVisited() {
-        Log.d("MAIN", "readDateCall");
         try {
             FileInputStream in = openFileInput("lastVisited");
             InputStreamReader inputStreamReader = new InputStreamReader(in);
