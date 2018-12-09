@@ -60,8 +60,8 @@ public class PetScreen extends AppCompatActivity {
             exerciseBar.setProgress(10);
         } else {
             Random rand = new Random();
-            foodBar.setProgress(rand.nextInt(5));
             waterBar.setProgress(rand.nextInt(5));
+            foodBar.setProgress(rand.nextInt(5));
             exerciseBar.setProgress(rand.nextInt(5));
         }
         startAPICall();
