@@ -3,15 +3,19 @@
 **What is it?** Ever wanted to fall down a wikipedia rabbit hole, but didn't have a place to start? Now you can learn something new everyday while also getting your daily fill of cute animal pictures! Reading wikipedia articles keep your brain healthy while also raising Fido's health bar higher. The longer your streak, the more cute puppies you get to see.
 
 Open it up to see your streak:
+
 ![Main Screen](exampleImages/main.png)
 
 See your pet's status:
+
 ![Pet Sad Screen](exampleImages/pet1.png)
 
 Click read to explore wikipedia:
+
 ![Wikipedia Screen](exampleImages/wiki.png)
 
 Go back to see your happy pet!
+
 ![Pet Happy Screen](exampleImages/pet2.png)
 
 See the demo video [here](https://www.youtube.com/watch?v=rutKchKaDb4)
