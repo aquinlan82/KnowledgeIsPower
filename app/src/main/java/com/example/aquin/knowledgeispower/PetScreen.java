@@ -26,6 +26,9 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
 
+/**
+ * Screen to view pet's health
+ */
 public class PetScreen extends AppCompatActivity {
     ProgressBar foodBar;
     ProgressBar waterBar;
@@ -42,18 +45,28 @@ public class PetScreen extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(this);
 
+        Thread t = new Thread() {
+            public void run() {
+                startAPICall();
+            }
+        };
+        t.start();
+
         foodBar = (ProgressBar) findViewById(R.id.foodProgress);
         waterBar = (ProgressBar) findViewById(R.id.waterProgress);
         exerciseBar = (ProgressBar) findViewById(R.id.exerciseProgress);
         readButton = (Button) findViewById(R.id.readButton);
         doggo = (ImageView) findViewById(R.id.goodDog);
 
+        //Go to wikipedia screen
         readButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(PetScreen.this, ReadScreen.class));
             }
         });
+
+        //Set health bars based on if daily goal has been et
         if(readProgress()) {
             foodBar.setProgress(10);
             waterBar.setProgress(10);
@@ -64,9 +77,12 @@ public class PetScreen extends AppCompatActivity {
             foodBar.setProgress(rand.nextInt(5));
             exerciseBar.setProgress(rand.nextInt(5));
         }
-        startAPICall();
+
     }
 
+    /*
+        Get url for image of a dog from api call and load using loadImage
+     */
     void startAPICall() {
         try {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -79,20 +95,20 @@ public class PetScreen extends AppCompatActivity {
                             try {
                                 String picture = (String) response.get("message");
                                 loadImage(picture);
-                            } catch (Exception e) {
-
-                            }
+                            } catch (Exception e) {}
                         }
                     }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(final VolleyError error) {
-                        }
+                @Override
+                public void onErrorResponse(final VolleyError error) {
+                }
             });
             requestQueue.add(jsonObjectRequest);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
+    /*
+        set image bitmap using url
+     */
     public void loadImage(String url) {
         ImageRequest imageRequest = new ImageRequest(
                 url,
@@ -108,13 +124,15 @@ public class PetScreen extends AppCompatActivity {
                 Bitmap.Config.ARGB_8888,
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
+                    public void onErrorResponse(VolleyError error) {}
                 }
         );
         requestQueue.add(imageRequest);
     }
 
+    /*
+        Return whether daily goal has been met based on contents of 'readProgress' file
+     */
     private boolean readProgress() {
         try {
             FileInputStream in = openFileInput("readProgress");
@@ -131,11 +149,14 @@ public class PetScreen extends AppCompatActivity {
             }
         } catch (Exception e) {
             updateReadProgress();
-            e.printStackTrace();
             readProgress();
         }
         return false;
     }
+
+    /*
+        Set 'readProgress' file to false before meeting goal
+     */
     private void updateReadProgress() {
         FileOutputStream outputStream;
         try {

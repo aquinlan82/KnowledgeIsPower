@@ -13,15 +13,19 @@ import android.widget.TextView;
 
 import java.io.FileOutputStream;
 
+/**
+ * Screen to read a random wikipedia article
+ */
 public class ReadScreen extends AppCompatActivity {
-    long startTime = 0;
-    WebView page;
-    TextView timer;
-    Button doneButton;
-    boolean changeStatus = false;
+    long startTime = 0;  //time read screen opened
+    WebView page;    //wikipedia article
+    TextView timer;     //displays how much time has passed
+    Button doneButton;    //goes to dog screen
+    boolean changeStatus = false;    //checks if streak goal met
 
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
+        //Checks if time goal is met and updates timer
         @Override
         public void run() {
             long millis = System.currentTimeMillis() - startTime;
@@ -32,23 +36,25 @@ public class ReadScreen extends AppCompatActivity {
             timer.setText(String.format("%d:%02d", minutes, seconds));
             timerHandler.postDelayed(this, 500);
 
-            if(minutes >= 1) {
+            if(seconds > 30 || minutes >= 1) {
                 doneButton.setEnabled(true);
                 doneButton.setVisibility(View.VISIBLE);
                 if (changeStatus == false) {
                     updateRead();
-                    changeStatus = true;
+                    changeStatus = true ;
                 }
             }
         }
     };
 
+    //Pauses timer if leaving app
     @Override
     public void onPause() {
         super.onPause();
         timerHandler.removeCallbacks(timerRunnable);
     }
 
+    //Loads gui
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +68,7 @@ public class ReadScreen extends AppCompatActivity {
         page.setWebViewClient(new WebViewClient());
         page.loadUrl("http://en.wikipedia.org/wiki/Special:Random");
 
+        //Goes to Pet screen
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,20 +76,21 @@ public class ReadScreen extends AppCompatActivity {
             }
         });
 
-        //set timer
+        //Set timer
         startTime = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
     }
 
+    /*
+        Sets 'readProgress' file to true when goal met
+     */
     private void updateRead() {
         FileOutputStream outputStream;
         try {
             outputStream = openFileOutput("readProgress", Context.MODE_PRIVATE);
             outputStream.write("t".getBytes());
             outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
 
     }
 }

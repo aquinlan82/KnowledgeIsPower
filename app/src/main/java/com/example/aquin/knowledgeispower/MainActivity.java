@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,10 +18,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+*	Knowledge is Power
+*	Created by Allison Quinlan and Jacqueline Chen for CSi125
+*	December 2018
+*/
+
+/**
+ * Opening screen, lets user choose which screen to view
+ */
 public class MainActivity extends AppCompatActivity {
-    Button petButton;
-    Button readButton;
-    TextView streakView;
+    Button petButton;   // see pet's health
+    Button readButton;  // read random wikipedia article
+    TextView streakView;  // shows streak
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +41,17 @@ public class MainActivity extends AppCompatActivity {
         readButton = (Button) findViewById(R.id.readButton);
         streakView = (TextView) findViewById(R.id.streak);
 
-        updateStreak();
-        readStreak();
-        updateDateVisited();
+        //Show user screen while updating behind the scenes
+        Thread t = new Thread() {
+            public void run() {
+                updateStreak();
+                readStreak();
+                updateDateVisited();
+            }
+        };
+        t.start();
 
+        //Go to pet screen
         petButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Go to wikipedia articles
         readButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void updateStreak() {
+    /*
+        Writes to file called 'streak' based on current date and last visited date
+     */
+     private void updateStreak() {
         String lastVisit = readDateVisited();
         String fileContents=" ";
         FileOutputStream outputStream;
@@ -63,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
             long difference = Math.abs(todayAsDate.getTime() - lastVisitAsDate.getTime());
             long differenceDates = difference / (24 * 60 * 60 * 1000);
-            Log.d("MAINS", differenceDates + " dif");
             if (differenceDates == 0) {
                 return;
             }
@@ -76,19 +94,18 @@ public class MainActivity extends AppCompatActivity {
                 fileContents = 0+"";
             }
 
-        } catch (Exception e) {
-
-        }
+        } catch (Exception e) {}
         try {
             outputStream = openFileOutput("streak", Context.MODE_PRIVATE);
             outputStream.write(fileContents.getBytes());
             outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
 
     }
 
+    /*
+        Returns value of file 'streak'
+     */
     private String readStreak() {
         try {
             FileInputStream in = openFileInput("streak");
@@ -102,28 +119,29 @@ public class MainActivity extends AppCompatActivity {
             in.close();
             streakView.setText("You have a streak of " + sb.toString() + " days in a row!");
             return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
         return "";
     }
 
+    /*
+        Writes current date to file 'lastVisited'
+     */
     private void updateDateVisited() {
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String today = df.format(c);
         FileOutputStream outputStream;
-
         try {
             outputStream = openFileOutput("lastVisited", Context.MODE_PRIVATE);
             outputStream.write(today.getBytes());
             outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
 
     }
 
+    /*
+        Sets file 'readProgress to false before reading
+     */
     private void updateReadProgress() {
         FileOutputStream outputStream;
         try {
@@ -136,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*
+        Reads the file 'lastVisited' which stores the date the
+        app was last used. If file is empty, calls update to file
+     */
     private String readDateVisited() {
         try {
             FileInputStream in = openFileInput("lastVisited");
@@ -154,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
             return sb.toString();
         } catch (Exception e) {
             updateDateVisited();
-            e.printStackTrace();
         }
         return "";
     }
